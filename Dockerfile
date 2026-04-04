@@ -15,9 +15,9 @@ COPY main.go .
 RUN go build -o main .
 
 # ---- FINAL STAGE ----
-FROM alpine:latest   # ✅ remove hardcoded platform
+FROM alpine:latest   
 
-ARG TARGETARCH       # ✅ important for multi-arch
+ARG TARGETARCH      
 ENV DOCKERIZE_VERSION=v0.9.3
 
 RUN apk add --no-cache wget openssl \
