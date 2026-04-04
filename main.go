@@ -115,12 +115,20 @@ type Administrator struct {
 
 // Main and setup
 func main() {
+	log.Println("🚀 App starting...")
+
+	log.Println("POSTGRES_URL:", os.Getenv("POSTGRES_URL"))
+	log.Println("GOOGLE_CLIENT_ID:", os.Getenv("GOOGLE_CLIENT_ID"))
+	log.Println("GOOGLE_CLIENT_SECRET:", os.Getenv("GOOGLE_CLIENT_SECRET"))
+	log.Println("GOOGLE_REDIRECT_URL:", os.Getenv("GOOGLE_REDIRECT_URL"))
 	loadConfig()
 	connectDB()
+	log.Println("✅ Passed config + DB")
 	defer db.Close()
 	initializeOAuth()
 	initializeSessionStore()
 	setupRoutes()
+	log.Println("🌐 Starting server now...")
 	startServer()
 }
 
@@ -228,8 +236,12 @@ func setupRoutes() {
 }
 
 func startServer() {
-	log.Println("Server starting on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Printf("Server starting on port %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
