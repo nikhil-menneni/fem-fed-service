@@ -81,10 +81,11 @@ up: down
 	docker compose up --detach
 
 deploy:
-	AWS_ACCOUNT_ID=$(AWS_ACCOUNT_ID) \
-	AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
-	AWS_ECR_DOMAIN=$(AWS_ECR_DOMAIN) \
-	./deploy.sh
+	aws ecs update-service \
+		--cluster $(ECS_CLUSTER_NAME) \
+		--service $(ECS_SERVICE_NAME) \
+		--force-new-deployment \
+		--region $(AWS_DEFAULT_REGION)
 
 migrate:
 	goose -dir "$(MIGRATION_DIR)" up
